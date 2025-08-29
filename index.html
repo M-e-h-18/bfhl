@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BFHL API Tester</title>
+<style>
+    /* General page styling */
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(to right, #74ebd5, #acb6e5);
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+        color: #333;
+    }
+
+    h1 {
+        margin-top: 40px;
+        color: #fff;
+        text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+        text-align: center;
+    }
+
+    /* Card styling */
+    .card {
+        background: #fff;
+        padding: 30px 40px;
+        margin-top: 30px;
+        border-radius: 20px;
+        box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+        max-width: 500px;
+        width: 90%;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 16px 35px rgba(0,0,0,0.2);
+    }
+
+    /* Input field styling */
+    input[type="text"] {
+        width: 100%;
+        padding: 15px 20px;
+        border-radius: 12px;
+        border: 1px solid #ccc;
+        font-size: 16px;
+        margin-bottom: 20px;
+        transition: border 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    input[type="text"]:focus {
+        border-color: #ff7f50;
+        box-shadow: 0 0 10px rgba(255,127,80,0.5);
+        outline: none;
+    }
+
+    /* Button styling */
+    button {
+        padding: 15px 30px;
+        border: none;
+        border-radius: 12px;
+        background: linear-gradient(45deg, #ff7f50, #ffb347);
+        color: #fff;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    button:hover {
+        background: linear-gradient(45deg, #ff6347, #ffae42);
+        transform: translateY(-2px);
+    }
+
+    /* Response popup styling */
+    #response {
+        margin-top: 20px;
+        background: #f0f8ff;
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        max-height: 350px;
+        overflow-y: auto;
+        font-family: monospace;
+        font-size: 14px;
+        opacity: 0;
+        transform: scale(0.9);
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    #response.show {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 600px) {
+        .card {
+            padding: 20px 25px;
+        }
+        button, input[type="text"] {
+            font-size: 14px;
+            padding: 12px 20px;
+        }
+    }
+</style>
+</head>
+<body>
+    <h1>BFHL API Tester</h1>
+
+    <div class="card">
+        <input type="text" id="inputData" placeholder="Enter items separated by comma e.g. a,1,334,$">
+        <button onclick="submitData()">Submit</button>
+        <pre id="response"></pre>
+    </div>
+
+<script>
+    async function submitData() {
+        const input = document.getElementById("inputData").value;
+        const arr = input.split(',').map(s => s.trim());
+
+        const responseBox = document.getElementById("response");
+
+        try {
+            const res = await fetch('https://your-render-url.onrender.com/bfhl', {  // replace with your Render URL
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ data: arr })
+            });
+            const data = await res.json();
+            responseBox.textContent = JSON.stringify(data, null, 2);
+            responseBox.classList.add("show");  // trigger popup animation
+        } catch (err) {
+            responseBox.textContent = "Error: " + err;
+            responseBox.classList.add("show");
+        }
+    }
+</script>
+</body>
+</html>
